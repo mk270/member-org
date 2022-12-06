@@ -42,7 +42,6 @@ async fn dump_google_sheet(creds_path: &str, workbook_id: &str, range: &str) {
         .values_get(workbook_id, range)
         .doit().await;
 
-    
     match result {
         Err(e) => {
             println!("{}", e);
@@ -58,7 +57,7 @@ async fn dump_google_sheet(creds_path: &str, workbook_id: &str, range: &str) {
     }
 }
 
-async fn get_service_account(creds_path : &str) -> 
+async fn get_service_account(creds_path : &str) ->
     Authenticator<HttpsConnector<HttpConnector>>
 {
     let creds = yup_oauth2::read_service_account_key(creds_path)
