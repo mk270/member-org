@@ -29,13 +29,13 @@ struct Cli {
 async fn main() {
     let args = Cli::parse();
 
-    main2(&args.credentials_path,
+    dump_google_sheet(&args.credentials_path,
           &args.workbook_id,
           &args.range)
         .await
 }
 
-async fn main2(creds_path: &str, workbook_id: &str, range: &str) {
+async fn dump_google_sheet(creds_path: &str, workbook_id: &str, range: &str) {
     let hub = make_hub(creds_path).await;
 
     let result = hub.spreadsheets()
@@ -58,7 +58,7 @@ async fn main2(creds_path: &str, workbook_id: &str, range: &str) {
     }
 }
 
-async fn get_sa(creds_path : &str) -> 
+async fn get_service_account(creds_path : &str) -> 
     Authenticator<HttpsConnector<HttpConnector>>
 {
     let creds = yup_oauth2::read_service_account_key(creds_path)
@@ -72,7 +72,7 @@ async fn get_sa(creds_path : &str) ->
 }
 
 async fn make_hub(creds_path : &str) -> Sheets<HttpsConnector<HttpConnector>> {
-    let auth = get_sa(creds_path).await;
+    let auth = get_service_account(creds_path).await;
     let hub = Sheets::new(
         hyper::Client::builder()
             .build(hyper_rustls::HttpsConnectorBuilder::new()
